@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function getFacts() {
+            const httpRequest = new XMLHttpRequest();
+            const url = 'https://cat-fact.herokuapp.com/facts';
+            httpRequest.open("GET", url);
+            httpRequest.send();
+            setText(`Идет загрузка`);
+
+            httpRequest.onload = function() {
+              if (httpRequest.status != 200) {
+               setText(`Ошибка ${httpRequest.status}: ${httpRequest.statusText}`);
+              } else {
+                const data = JSON.parse(this.responseText);
+
+                let result = '<ul>';
+                for (let i = 0; i < data.length; i++) {
+                  result += '<li>' + data[i].text + '</li>';
+                }
+                result += '</ul>';
+                setText(result);
+              }
+            };
+
+            httpRequest.onerror = function() {
+              setText(`Произошла ошибка, попробуйте еще раз`);
+            };
+        }
+
+        function setText(text) {
+            document.getElementById("result").innerHTML = text;
+        }
+    </script>
+</head>
+<body>
+<h2>Браузер</h2>
+<button type="button" onclick="getFacts()">Выполнить запрос</button>
+<p id="result"></p>
+</body>
+</html>

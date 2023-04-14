@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744681839662",
+    "project_id": "itmohack2023",
+    "storage_bucket": "itmohack2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744681839662:android:95b4e1a2442322def553bf",
+        "android_client_info": {
+          "package_name": "ru.ok.android.itmohack2023"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744681839662-6bdt25mj59bleanebb529e75hnsl5s72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBorRxmrbV5k-nLB9CEnikyAfrTVtNwmZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744681839662-6bdt25mj59bleanebb529e75hnsl5s72.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
