@@ -12,6 +12,7 @@ class DownloadManagerActivity : AppCompatActivity() {
     private lateinit var catButton: Button
     private lateinit var dogButton: Button
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloadmanager)
@@ -25,6 +26,7 @@ class DownloadManagerActivity : AppCompatActivity() {
         catButton.setOnClickListener {
             download(CATS[(0 until catSize).random()], "cat")
         }
+
     }
 
     private fun download(uriString: String, type: String) {

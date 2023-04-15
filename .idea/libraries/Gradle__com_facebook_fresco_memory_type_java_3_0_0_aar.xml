@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.fresco:memory-type-java:3.0.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9e56875e1006e575296de4898b437fbd/transformed/memory-type-java-3.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9e56875e1006e575296de4898b437fbd/transformed/memory-type-java-3.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/memory-type-java/3.0.0/5415d33a8a28a228d63f1a24e7cd76eecc03e629/memory-type-java-3.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/memory-type-java/3.0.0/49a406948445147f125c57f87e1a4d4c283462ec/memory-type-java-3.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
