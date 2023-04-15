@@ -19,6 +19,7 @@ class OkHttpActivity : AppCompatActivity() {
 
         Threads.ioPool.execute {
             run("https://cat-fact.herokuapp.com/facts")?.let {
+
                 val textJson = JSONArray(it)
                 for (i in 0 until textJson.length()) {
                     val factJson = textJson.getJSONObject(i)

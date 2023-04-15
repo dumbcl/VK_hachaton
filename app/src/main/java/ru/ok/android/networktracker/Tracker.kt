@@ -1,19 +1,22 @@
 package ru.ok.android.networktracker
 
 import android.hardware.TriggerEvent
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.time.ZonedDateTime
 
-enum class TrackerEvent {
-    CHANGE_BATTERY, CHANGE_REQUEST
+enum class TrackerEvent(val value: String) {
+    CHANGE_BATTERY("CHANGE_BATTERY"),
+    CHANGE_REQUEST("CHANGE_REQUEST")
 }
 
-object Payload {
-    val data = 0
-}
+typealias SubscriberCallback = (payload: Any) -> Unit
 
-//<reifed T: TrackerEvent<T>>
-typealias SubscriberCallback = (payload: Payload) -> Unit
+typealias Payload = Any
 
 object Subscriber {
+    var activityName: String = ""
     var eventTitle: TrackerEvent = TrackerEvent.CHANGE_BATTERY
     var callback: SubscriberCallback = {print("hello")}
 }
@@ -22,14 +25,14 @@ object Subscriber {
 class Tracker {
 
     init {
-        (mb) =>{
-            triggerEvents(TriggerEvent.CHANGE)
-        }
+        NetworkTracker.getInstance()
     }
 
     val subscribers = ArrayList<Subscriber>()
-    fun subscribe(eventTitle: TrackerEvent, callback: SubscriberCallback) {
+    val DB_NAME = "logs.txt"
+    fun subscribe(activityName: String, eventTitle: TrackerEvent, callback: SubscriberCallback) {
         val subscriber: Subscriber =  Subscriber
+        subscriber.activityName = activityName
         subscriber.eventTitle = eventTitle
         subscriber.callback = callback
         subscribers.add(subscriber)
@@ -41,15 +44,45 @@ class Tracker {
     }
 
     private fun triggerEvents(eventTitle: TrackerEvent, payload: Payload) {
-        for (subscriber in subscribers)
-            if (subscriber.eventTitle == eventTitle) triggerEvent(eventTitle, payload, subscriber.callback)
+        subscribers.forEach{s-> if(s.eventTitle==eventTitle) triggerEvent(eventTitle, payload, s.callback)}
     }
 
+    fun pullLogs(): File {
+        return File("", DB_NAME)
+    }
+    fun cleanLogs() {
+        val file: File = pullLogs()
+        FileOutputStream(file).use {
+            val bytes = ("").toByteArray()
+            it.write(bytes)
+        }
+    }
+    fun isThisMonthCleaned(): Boolean {
+        val file: File = pullLogs()
+        val data = FileInputStream(file).use {
+            String(it.readBytes())
+        }
+        return data.split("\n")[0].split(" ")[0].substring(5, 7) == ZonedDateTime().now().toString().substring(5, 7)
+    }
     private fun triggerEvent(eventTitle: TrackerEvent, payload: Payload, callback: SubscriberCallback){
         when(eventTitle){
-            TrackerEvent.CHANGE_BATTERY -> print(0)
-            TrackerEvent.CHANGE_REQUEST -> print(1)
-            else -> print(payload)
+            TrackerEvent.CHANGE_REQUEST -> {
+                val timeNow: String = ZonedDateTime().now().toString()
+                val dateCalendar: String = timeNow.substring(0, 10).replace("-", ".")
+                val dateClock: String = timeNow.substring(11, 19)
+                val activityName: String = payload?.activityName
+                val size_kb: String = payload?.size_kb.toString()
+
+                val file = pullLogs()
+                val data = FileInputStream(file).use {
+                    String(it.readBytes())
+                }
+                FileOutputStream(file).use {
+                    val bytes = (data + "\n$dateCalendar $dateClock $activityName $size_kb").toByteArray()
+                    it.write(bytes)
+                }
+            }
+            else -> print("$eventTitle, $payload")
         }
         callback(payload)
     }
