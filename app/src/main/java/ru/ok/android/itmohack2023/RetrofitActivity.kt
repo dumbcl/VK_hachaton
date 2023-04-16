@@ -1,6 +1,7 @@
 package ru.ok.android.itmohack2023
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -14,8 +15,13 @@ import retrofit2.Response
 import ru.ok.android.itmohack2023.retrofit.CatsApi
 import ru.ok.android.itmohack2023.retrofit.RetrofitProvider
 import ru.ok.android.itmohack2023.retrofit.dto.CatFact
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 
 class RetrofitActivity : Activity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -78,6 +84,8 @@ class RetrofitActivity : Activity() {
                 }
             }
         }
+
+        tracker.subscribe("RetrofitActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
     }
 
     private fun handleError(t: Throwable) {
@@ -91,6 +99,7 @@ class RetrofitActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        tracker.clean()
         compositeDisposable.dispose()
     }
 }

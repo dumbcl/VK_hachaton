@@ -1,11 +1,18 @@
 package ru.ok.android.itmohack2023
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
 
 class MainActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,5 +52,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.downloadmanager).setOnClickListener {
             startActivity(Intent(this, DownloadManagerActivity::class.java))
         }
+
+        //tracker.cleanLogs()
+        //Log.d("TrafficUsageJobService", tracker.countLogs().toString())
+
     }
 }

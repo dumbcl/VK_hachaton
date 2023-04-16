@@ -1,12 +1,18 @@
 package ru.ok.android.itmohack2023
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 
 class PicassoActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
     private lateinit var dog1: ImageView
     private lateinit var dog2: ImageView
     private lateinit var dog3: ImageView
@@ -15,11 +21,15 @@ class PicassoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picasso)
 
+        tracker.subscribe("OkHttpActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
+
         dog1 = findViewById(R.id.dog_photo_1)
         dog2 = findViewById(R.id.dog_photo_2)
         dog3 = findViewById(R.id.dog_photo_3)
 
         bindImages()
+
+        tracker.subscribe("PicassoActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
     }
 
     override fun onStart() {
@@ -55,6 +65,11 @@ class PicassoActivity : AppCompatActivity() {
             "https://cdn2.thedogapi.com/images/VDRwpgVTB.jpg"
         )
         val size = URLS.size
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tracker.clean()
     }
 }
 

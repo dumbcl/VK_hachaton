@@ -1,5 +1,6 @@
 package ru.ok.android.itmohack2023
 
+import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Space
@@ -8,13 +9,21 @@ import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 import java.io.IOException
 
 class OkHttpActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ok_http)
+
+        tracker.subscribe("OkHttpActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
+
         val list = findViewById<ViewGroup>(R.id.list)
 
         Threads.ioPool.execute {
@@ -37,6 +46,11 @@ class OkHttpActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tracker.clean()
     }
 
     @Throws(IOException::class)

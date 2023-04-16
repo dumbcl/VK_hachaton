@@ -7,8 +7,13 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 
 class DownloadManagerActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
     private lateinit var catButton: Button
     private lateinit var dogButton: Button
 
@@ -16,6 +21,8 @@ class DownloadManagerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloadmanager)
+
+        tracker.subscribe("DownloadManagerActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
 
         catButton = findViewById(R.id.cat_button)
         dogButton = findViewById(R.id.dog_button)
@@ -26,6 +33,7 @@ class DownloadManagerActivity : AppCompatActivity() {
         catButton.setOnClickListener {
             download(CATS[(0 until catSize).random()], "cat")
         }
+
 
     }
 
@@ -85,5 +93,10 @@ class DownloadManagerActivity : AppCompatActivity() {
         )
         val catSize = CATS.size
         val dogSize = DOGS.size
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tracker.clean()
     }
 }

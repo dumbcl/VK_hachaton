@@ -1,5 +1,6 @@
 package ru.ok.android.itmohack2023
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.ExoPlayer
@@ -7,8 +8,13 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 
 class ExoPlayerActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
 
     private var exoPlayer: ExoPlayer? = null
     private var playbackPosition = 0L
@@ -17,6 +23,9 @@ class ExoPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exo_player)
+
+        tracker.subscribe("ExoPlayerActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
+
         preparePlayer()
     }
 
@@ -55,9 +64,11 @@ class ExoPlayerActivity : AppCompatActivity() {
         releasePlayer()
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         releasePlayer()
+        tracker.clean()
     }
 
     companion object {

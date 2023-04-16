@@ -1,11 +1,17 @@
 package ru.ok.android.itmohack2023
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import ru.ok.android.networktracker.NetworkType
+import ru.ok.android.networktracker.Tracker
+import ru.ok.android.networktracker.TrackerEvent
 
 class GlideActivity : AppCompatActivity() {
+    private val context: Context = this
+    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
     private lateinit var cat1: ImageView
     private lateinit var cat2: ImageView
     private lateinit var cat3: ImageView
@@ -14,11 +20,15 @@ class GlideActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_glide)
 
+        tracker.subscribe("GlideActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
+
         cat1 = findViewById(R.id.cat_photo_1)
         cat2 = findViewById(R.id.cat_photo_2)
         cat3 = findViewById(R.id.cat_photo_3)
 
         bindImages()
+
+
     }
 
     override fun onStart() {
@@ -53,6 +63,11 @@ class GlideActivity : AppCompatActivity() {
             "https://cdn2.thecatapi.com/images/ag9.jpg"
         )
         val size = PicassoActivity.URLS.size
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tracker.clean()
     }
 }
 

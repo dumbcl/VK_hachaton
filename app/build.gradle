@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "ru.ok.android.itmohack2023"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -69,5 +69,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation 'ru.ok.android.networktracker:library-network-tracker:12.+'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'javax.activation:activation:1.1.1'
 }
