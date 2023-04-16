@@ -1,19 +1,14 @@
 package ru.ok.android.networktracker
 
 import android.content.Context
-import android.hardware.TriggerEvent
 import android.util.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
 import java.util.Date
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import ru.ok.android.networktracker.EmailHandler
-import ru.ok.android.networktracker.Email
 
 enum class TrackerEvent(val value: String) {
     //CHANGE_BATTERY("CHANGE_BATTERY"),
@@ -33,7 +28,7 @@ typealias SubscriberCallback = (payload: Payload) -> Unit
 object Subscriber {
     var activityName: String = ""
     var eventTitle: TrackerEvent = TrackerEvent.CHANGE_NETWORK
-    var callback: SubscriberCallback = {print("hello")}
+    var callback: SubscriberCallback = { print("hello") }
 }
 
 sealed class Payload {
@@ -43,20 +38,29 @@ sealed class Payload {
 
 var baseNetworkHandler: BaseNetworkHandler = BaseNetworkHandler()
 
-class Tracker(val context: Context, networkType: NetworkType, period: Long, var maxLogsNumber: Int = 10, var emailOpts: Email? = null) {
+class Tracker(
+    val context: Context,
+    networkType: NetworkType,
+    period: Long,
+    var maxLogsNumber: Int = 10,
+    var emailOpts: Email? = null
+) {
 
     val executor = ScheduledThreadPoolExecutor(3)
     val initialDelay = 0L
+
     init {
         executeNetwork(period)
     }
-    fun executeNetwork(period: Long){
+
+    fun executeNetwork(period: Long) {
         executor.scheduleAtFixedRate({
             val subs = subscribers.size.toString()
             //Log.d("TrafficUsageJobService", "yehu $subs");
             var dataUsage = baseNetworkHandler.getCurrentDataUsageKB()
-            if (dataUsage > 0L){
+            if (dataUsage > 0L) {
                 for (subscriber in subscribers) {
+                    Log.d("TrafficUsageJobService", "yehu0 $subscriber")
                     if (subscriber.eventTitle == TrackerEvent.CHANGE_NETWORK) {
                         Log.d("TrafficUsageJobService", "yehu1 $subs");
                         var payloadNetwork: Payload.Network =
@@ -67,7 +71,7 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
                             subscriber.callback
                         )
                     }
-                    if (subscriber.eventTitle == TrackerEvent.EMAIL){
+                    if (subscriber.eventTitle == TrackerEvent.EMAIL) {
                         Log.d("TrafficUsageJobService", "yehu2 $subs");
                         if (emailOpts != null && checkLogsCount()) {
                             var payloadEmail: Payload.EmailP = Payload.EmailP(emailOpts!!)
@@ -82,7 +86,7 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
     var subscribers = ArrayList<Subscriber>()
     val DB_NAME = "logs.txt"
     fun subscribe(activityName: String, eventTitle: TrackerEvent, callback: SubscriberCallback) {
-        val subscriber: Subscriber =  Subscriber
+        val subscriber: Subscriber = Subscriber
         subscriber.activityName = activityName
         subscriber.eventTitle = eventTitle
         subscriber.callback = callback
@@ -97,7 +101,7 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
     fun pullLogs(): File {
         val file = File(context.filesDir, DB_NAME)
         if (file.exists()) return file
-        else{
+        else {
             FileOutputStream(file).use {
                 val bytes = "".toByteArray()
                 it.write(bytes)
@@ -105,6 +109,7 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
             return file
         }
     }
+
     fun cleanLogs() {
         val file: File = pullLogs()
         FileOutputStream(file).use {
@@ -113,26 +118,26 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
         }
     }
 
-    fun countLogs() : Int {
+    fun countLogs(): Int {
         val file = pullLogs()
         val lines = FileInputStream(file).use {
             String(it.readBytes())
         }.split("\n")
-        return lines.size-1
+        return lines.size - 1
     }
 
-    fun checkLogsCount() : Boolean {
+    fun checkLogsCount(): Boolean {
         return (countLogs() > maxLogsNumber)
     }
 
-//    fun isThisMonthCleaned(): Boolean {
+    //    fun isThisMonthCleaned(): Boolean {
 //        val file: File = pullLogs()
 //        val data = FileInputStream(file).use {
 //            String(it.readBytes())
 //        }
 //        return data.split("\n")[0].split(" ")[0].substring(5, 7) == ZonedDateTime().now().toString().substring(5, 7)
 //    }
-    fun changeNetwork(payload:Payload.Network) {
+    fun changeNetwork(payload: Payload.Network) {
         val date = Date()
         val formattedDate = SimpleDateFormat("dd.MM.yyyy").format(date)
         val formattedTime = SimpleDateFormat("HH.mm.ss").format(date)
@@ -145,20 +150,32 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
             String(it.readBytes())
         }
         FileOutputStream(file).use {
-            val bytes = ("$data\n$formattedDate $formattedTime $activityName $size_kb").toByteArray()
+            val bytes =
+                ("$data\n$formattedDate $formattedTime $activityName $size_kb").toByteArray()
             it.write(bytes)
         }
     }
 
     private fun triggerEvents(eventTitle: TrackerEvent, payload: Payload) {
-        subscribers.forEach{s-> if(s.eventTitle==eventTitle) triggerEvent(eventTitle, payload, s.callback)}
+        subscribers.forEach { s ->
+            if (s.eventTitle == eventTitle) triggerEvent(
+                eventTitle,
+                payload,
+                s.callback
+            )
+        }
     }
 
-    private fun triggerEvent(eventTitle: TrackerEvent, payload: Payload, callback: SubscriberCallback){
-        when(payload){
+    private fun triggerEvent(
+        eventTitle: TrackerEvent,
+        payload: Payload,
+        callback: SubscriberCallback
+    ) {
+        when (payload) {
             is Payload.Network -> {
                 changeNetwork(payload)
             }
+
             is Payload.EmailP -> {
                 val emailHandler: EmailHandler = EmailHandler()
                 payload.email.attachment = pullLogs()
@@ -166,14 +183,17 @@ class Tracker(val context: Context, networkType: NetworkType, period: Long, var 
                 cleanLogs()
                 Log.d("TrafficUsageJobService", "ura")
             }
+
             else -> print("$eventTitle, $payload")
         }
         callback(payload)
     }
-    fun stop(){
+
+    fun stop() {
         executor.shutdown()
     }
-    fun clean(){
+
+    fun clean() {
         stop()
         subscribers.removeAll(subscribers)
     }

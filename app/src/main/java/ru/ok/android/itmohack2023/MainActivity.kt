@@ -11,8 +11,8 @@ import ru.ok.android.networktracker.NetworkType
 import ru.ok.android.networktracker.Tracker
 
 class MainActivity : AppCompatActivity() {
-    private val context: Context = this
-    val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
+    //private val context: Context = this
+    //val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

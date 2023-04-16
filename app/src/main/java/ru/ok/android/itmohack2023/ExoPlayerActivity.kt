@@ -25,7 +25,7 @@ class ExoPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_exo_player)
 
         tracker.subscribe("ExoPlayerActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
-
+        tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
         preparePlayer()
     }
 

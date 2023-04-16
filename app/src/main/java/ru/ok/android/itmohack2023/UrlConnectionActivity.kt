@@ -16,6 +16,7 @@ import ru.ok.android.networktracker.TrackerEvent
 
 class UrlConnectionActivity : AppCompatActivity() {
     private val context: Context = this
+
     //val email: Email = Email("smtp.gmail.com", "587", "senrec17@gmail.com", "pass123word", "kolahola49@gmail.com", "Logs", "This is your logs", null)
     //val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L, emailOpts = email)
     val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
@@ -23,8 +24,8 @@ class UrlConnectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.cat_facts_layout)
-        tracker.subscribe("UrlConnectionActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
-        //tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, {print("hello")})
+        tracker.subscribe("UrlConnectionActivity", TrackerEvent.CHANGE_NETWORK, { print("hello") })
+        tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
         val list = findViewById<ViewGroup>(R.id.list)
 
 

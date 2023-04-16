@@ -1,4 +1,5 @@
 package ru.ok.android.networktracker
+
 import android.util.Log
 import java.io.File
 import java.util.*
@@ -11,7 +12,16 @@ import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
 
 
-class Email(host: String, port: String, from: String, password: String, to: String, subject: String, body: String, attachment: File?) {
+class Email(
+    host: String,
+    port: String,
+    from: String,
+    password: String,
+    to: String,
+    subject: String,
+    body: String,
+    attachment: File?
+) {
     var host: String = host
     var port: String = port
     var from: String = from
