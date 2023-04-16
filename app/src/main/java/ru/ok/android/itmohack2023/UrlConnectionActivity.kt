@@ -25,7 +25,7 @@ class UrlConnectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.cat_facts_layout)
         tracker.subscribe("UrlConnectionActivity", TrackerEvent.CHANGE_NETWORK, { print("hello") })
-        tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
+        //tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
         val list = findViewById<ViewGroup>(R.id.list)
 
 

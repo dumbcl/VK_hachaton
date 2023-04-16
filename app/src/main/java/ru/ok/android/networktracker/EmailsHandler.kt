@@ -45,6 +45,7 @@ class EmailHandler {
                 return PasswordAuthentication(email.from, email.password)
             }
         })
+
         try {
             val message = MimeMessage(session).apply {
                 setFrom(InternetAddress(email.from))
@@ -55,7 +56,6 @@ class EmailHandler {
             if (email.attachment != null) {
                 val messageBodyPart = MimeBodyPart()
                 messageBodyPart.setText(email.body)
-
                 val attachmentBodyPart = MimeBodyPart()
                 attachmentBodyPart.setDataHandler(DataHandler(FileDataSource(email.attachment)))
                 attachmentBodyPart.setFileName(email.attachment!!.name)
@@ -65,7 +65,9 @@ class EmailHandler {
                 multipart.addBodyPart(attachmentBodyPart)
 
                 message.setContent(multipart)
+
             } else {
+
                 //setText(email.body)
             }
 

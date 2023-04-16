@@ -71,13 +71,14 @@ class Tracker(
                             subscriber.callback
                         )
                     }
-                    if (subscriber.eventTitle == TrackerEvent.EMAIL) {
-                        Log.d("TrafficUsageJobService", "yehu2 $subs");
-                        if (emailOpts != null && checkLogsCount()) {
-                            var payloadEmail: Payload.EmailP = Payload.EmailP(emailOpts!!)
-                            triggerEvent(TrackerEvent.EMAIL, payloadEmail, subscriber.callback)
-                        }
-                    }
+//                    if (subscriber.eventTitle == TrackerEvent.EMAIL) {
+//                        Log.d("TrafficUsageJobService", "yehu2 ${emailOpts != null}");
+//                        if (emailOpts != null && checkLogsCount()) {
+//                            Log.d("TrafficUsageJobService", "ura")
+//                            var payloadEmail: Payload.EmailP = Payload.EmailP(emailOpts!!)
+//                            triggerEvent(TrackerEvent.EMAIL, payloadEmail, subscriber.callback)
+//                        }
+//                    }
                 }
             }
         }, initialDelay, period, TimeUnit.MILLISECONDS)
@@ -179,9 +180,9 @@ class Tracker(
             is Payload.EmailP -> {
                 val emailHandler: EmailHandler = EmailHandler()
                 payload.email.attachment = pullLogs()
+                //Log.d("TrafficUsageJobService", "uraaaaa")
                 emailHandler.sendEmail(payload.email)
                 cleanLogs()
-                Log.d("TrafficUsageJobService", "ura")
             }
 
             else -> print("$eventTitle, $payload")

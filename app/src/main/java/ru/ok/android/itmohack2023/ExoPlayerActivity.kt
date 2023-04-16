@@ -8,12 +8,14 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import ru.ok.android.networktracker.Email
 import ru.ok.android.networktracker.NetworkType
 import ru.ok.android.networktracker.Tracker
 import ru.ok.android.networktracker.TrackerEvent
 
 class ExoPlayerActivity : AppCompatActivity() {
     private val context: Context = this
+    //val email: Email = Email("smtp.gmail.com", "587", "senrec17@gmail.com", "pass123word", "kolahola49@gmail.com", "Logs", "This is your logs", null)
     val tracker: Tracker = Tracker(context, NetworkType.BASIC, 1000L)
 
     private var exoPlayer: ExoPlayer? = null
@@ -25,7 +27,7 @@ class ExoPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_exo_player)
 
         tracker.subscribe("ExoPlayerActivity", TrackerEvent.CHANGE_NETWORK, {print("hello")})
-        tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
+        //tracker.subscribe("UrlConnectionActivity", TrackerEvent.EMAIL, { print("hi") })
         preparePlayer()
     }
 
