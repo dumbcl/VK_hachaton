@@ -4,7 +4,7 @@ Library for tracking network connection and understanding where do network anoma
  
 ## How it works 
  
-We use publisher-subscriber pattern: you subscribe, it gives you notifications. 
+The project has publisher-subscriber pattern: you subscribe, it gives you notifications. 
  
 ## Usage 
  
